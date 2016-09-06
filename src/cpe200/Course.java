@@ -4,22 +4,43 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Course {
+    protected final static String DEFAULT_ID = "000000";
+    protected final static String DEFAULT_COURSE = "TBA";
+    protected final static String DEFAULT_LEC = "TBA";
+    protected final static int DEFAULT_MAX = 30;
+    protected final static int DEFAULT_NUM = 0;
 
     public Course() {
-        this("","","",30);
+        this.course_name = DEFAULT_COURSE;
+        this.course_id = DEFAULT_ID;
+        this.lecturer = DEFAULT_LEC;
+        this.max_students = DEFAULT_MAX;
     }
 
     public Course(String n, String cid) {
-        // implement here
+        this.course_name = n;
+        this.course_id = cid;
+        this.lecturer = DEFAULT_LEC;
+        this.max_students = DEFAULT_MAX;
     }
 
     public Course(String n, String cid, String l) {
-        // implement here
+        this.course_name = n;
+        this.course_id = cid;
+        this.lecturer = l;
+        this.max_students = DEFAULT_MAX;
     }
 
     public Course(String n, String cid, String l, int max) {
         this.course_name = !n.equalsIgnoreCase("")?n:"TBA";
-        // implement the rest here
+        this.course_id = !cid.equalsIgnoreCase("")?cid:DEFAULT_ID;
+        this.lecturer = !l.equalsIgnoreCase("")?l:DEFAULT_LEC;
+        if(max < 10)
+        {
+            this.max_students = DEFAULT_MAX;
+        }
+        else this.max_students = max;
+
     }
 
     public String getCourse_name() {
@@ -41,29 +62,35 @@ public class Course {
     // implement the other get and set methods here
     public String getLecturer() {
         // implement here
-        return "lecturer";
+        return lecturer;
     }
 
     public void setLecturer(String lecturer) {
-        // implement here
+        this.lecturer =!lecturer.equalsIgnoreCase("")?lecturer:this.lecturer;
     }
 
     public int getMax_students() {
         // implement here
-        return 0;
+        return max_students;
     }
 
     public void setMax_students(int max_students) {
-        // implement here
+        if(max_students >= 10)
+        {
+            this.max_students = max_students;
+        }
     }
 
     public int getNo_students() {
-        // implement here
-        return 0;
+
+        return no_students;
     }
 
     public void setNo_students(int no_students) {
-        // implement here
+        if(no_students >= 0 && no_students <= max_students)
+        {
+            this.no_students = no_students;
+        }
     }
 
     @Override
@@ -71,6 +98,19 @@ public class Course {
         String o = this.course_name + " ("
                 + this.course_id + "), Teacher: "
                 + this.lecturer + ", has ";
+                if(no_students == 0)
+                {
+                    o = o+"NO student, ";
+                }
+                else if(no_students == 1)
+                {
+                    o = o+"ONE student, ";
+                }
+                else
+                {
+                    o = o+no_students + " students, ";
+                }
+                o = o + "[maximum: " + max_students +"]";
 
         // implement the rest here
 
@@ -81,9 +121,12 @@ public class Course {
         Pattern p = Pattern.compile(idREGEX);
         Matcher m = p.matcher(id);
 
-        // implement the rest here
+        if(m.find() && id.length() == 6)
+        {
+            return true;
+        }
 
-        return true;
+        else return false;
     }
 
     // Regular expression for the Student ID pattern
